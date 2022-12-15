@@ -64,7 +64,15 @@ public class ConsolePrinterUtility {
 	{
 		String[] splitter = toBox.split(",");
 		String boxed = "+";
-		for (int i = 0; i<toBox.length()+1;i++)
+		int max = 0;
+		for (int i = 0; i<splitter.length;i++)
+		{
+			if (max < splitter[i].length())
+			{
+				max = splitter[i].length()+5;
+			}
+		}
+		for (int i = 0; i<max+1;i++)
 		{
 			boxed+="-";
 		}
@@ -72,14 +80,14 @@ public class ConsolePrinterUtility {
 		for (int i = 0; i < splitter.length; i++)
 		{
 			boxed += "| " + splitter[i];
-			for (int j = 0; j < ((toBox.length())-(splitter[i]).length());j++)
+			for (int j = 0; j < ((max)-(splitter[i]).length());j++)
 			{
 				boxed += " ";
 			}
 			boxed+="|\n";
 		}
 		boxed+="+";
-		for (int i = 0; i<toBox.length()+1;i++)
+		for (int i = 0; i<max+1;i++)
 		{
 			boxed+="-";
 		}

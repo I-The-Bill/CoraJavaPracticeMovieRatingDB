@@ -7,7 +7,7 @@ public class Rating
 	private int UserId;
 	private int rating;
 	
-	public Rating(int ratingId, int movieId, int rating) {
+	public Rating(int ratingId, int userId, int movieId, int rating) {
 		super();
 		this.ratingId = ratingId;
 		this.movieId = movieId;

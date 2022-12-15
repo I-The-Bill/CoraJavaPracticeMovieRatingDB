@@ -13,6 +13,7 @@ public class StorageUtility
 	private ArrayList<Rating> RatingTracker = new ArrayList<Rating>();
 	private ArrayList<Movie> MovieDb = new ArrayList<Movie>();
 	private ArrayList<User> userDb = new ArrayList<User>();
+	private ConsolePrinterUtility cpu = new ConsolePrinterUtility();
 	
 	public ArrayList<Rating> getRatingTracker() {
 		return RatingTracker;
@@ -27,7 +28,10 @@ public class StorageUtility
 		this.MovieDb.add(toAdd);
 	}
 	
-	
+	public void addRating(Rating toAdd)
+	{
+		this.RatingTracker.add(toAdd);
+	}
 	public ArrayList<User> getUserDB() {
 		return userDb;
 	}
@@ -39,7 +43,53 @@ public class StorageUtility
 	
 	public int nextAvalibleUserId()
 	{
-		return userDb.size();
+		int toRet = 0;
+		for (int i = 0; i < userDb.size(); i++)
+		{
+			if (userDb.get(i) != null)
+			{
+				toRet++;
+			}
+			else
+			{
+				return toRet;
+			}
+		}
+		return toRet;
+	}
+	
+	public int nextAvalibleMovieId()
+	{
+		int toRet = 0;
+		for (int i = 0; i < MovieDb.size(); i++)
+		{
+			if (MovieDb.get(i) != null)
+			{
+				toRet++;
+			}
+			else
+			{
+				return toRet;
+			}
+		}
+		return toRet+1;
+	}
+	
+	public int nextAvalibleRatingId()
+	{
+		int toRet = 1;
+		for (int i = 0; i < RatingTracker.size(); i++)
+		{
+			if (RatingTracker.get(i) != null)
+			{
+				toRet++;
+			}
+			else
+			{
+				return toRet;
+			}
+		}
+		return toRet;
 	}
 	/*public void setRatingTracker(ArrayList<Rating> ratingTracker) {
 		RatingTracker = ratingTracker;
@@ -52,29 +102,70 @@ public class StorageUtility
 	
 	public User findUser(String toFind) 
 	{
-		for(int i = 0; i < userDb.size(); i++)
+		for (User x : userDb)
 		{
-			if (toFind.equalsIgnoreCase(userDb.get(i).getUsername()));
+			if (toFind.equalsIgnoreCase(x.getUsername()))
 			{
-				return userDb.get(i);
+				return x;
 			}
 		}
 		return null;
 	}
 	
-	public boolean isUsernameAvaliable(String x) 
+	public boolean isUsernameAvaliable(String isOpen) 
 	{
-		User exist = findUser(x);
-
-		if (exist == null)
-		{
-			return false;
+		for (User x : userDb)
+		{   
+			if (x.getUsername().equalsIgnoreCase(isOpen))
+			{
+				return false;
+			}
 		}
-		else
-		{
-			return true;
-		}
+		return true;
 		
+	}
+	
+	private double getMovieAvgRating(int movieId)
+	{
+		double avg = 0;
+		double movieRating = 0;
+		for (int i = 0; i < RatingTracker.size(); i++)
+		{
+			if(RatingTracker.get(i).getMovieId() == movieId)
+			{
+				avg += RatingTracker.get(i).getRating();
+				movieRating++;
+			}
+		}
+		if(movieRating == 0 )
+		{
+			movieRating =1;
+		}
+		avg = avg/movieRating;
+		return avg;
+	}
+	
+	public void printMovieList()
+	{
+		
+		System.out.println("");
+		String movieList = String.format("%-38s%-18s%s ", "__Movie Title__", "__Movie id__", "__Avg Rating/10__");
+		movieList += ",";
+		for (Movie x : getMovieDB())
+		{
+			
+			String id = x.getId()+"";
+			if(getMovieAvgRating(x.getId()) != 0.0)
+			{
+				movieList += String.format("%-43s%-20s%s  ", x.getName(), id, getMovieAvgRating(x.getId()));
+			}
+			else
+			{
+				movieList += String.format("%-43s%-17s%s  ", x.getName(), id,"No Ratings");
+			}
+			movieList += ",";
+		}
+		cpu.println(cpu.MultiLineinABox(movieList));
 	}
 	
 }
